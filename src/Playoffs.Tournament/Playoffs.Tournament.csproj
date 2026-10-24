@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="MongoDB.Driver" />
+    <PackageReference Include="Serilog.AspNetCore" />
+    <ProjectReference Include="..\Playoffs.Contracts\Playoffs.Contracts.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" />
+    <PackageReference Include="Grpc.AspNetCore" />
+    <PackageReference Include="Grpc.Tools" PrivateAssets="All" />
+    <Protobuf Include="proto/playoffs/tournament/v1/tournament.proto" ProtoRoot="proto" GrpcServices="Both" />
+  </ItemGroup>
+</Project>

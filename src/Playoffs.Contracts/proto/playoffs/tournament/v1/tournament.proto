@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package playoffs.tournament.v1;
+
+option csharp_namespace = "Playoffs.Contracts.Tournaments.V1";
+
+service TournamentService {
+  rpc GetTournament(GetTournamentRequest) returns (GetTournamentResponse);
+  rpc ListTournaments(ListTournamentsRequest) returns (ListTournamentsResponse);
+}
+
+message GetTournamentRequest {
+  string id = 1;
+}
+
+message GetTournamentResponse {
+  Tournament tournament = 1;
+}
+
+message ListTournamentsRequest {}
+
+message ListTournamentsResponse {
+  repeated Tournament tournaments = 1;
+}
+
+message Tournament {
+  string id = 1;
+  string organizer_id = 2;
+  string name = 3;
+  string sport_id = 4;
+  TournamentStatus status = 5;
+  int32 max_teams = 6;
+  repeated Team teams = 7;
+}
+
+message Team {
+  string id = 1;
+  string name = 2;
+}
+
+enum TournamentStatus {
+  TOURNAMENT_STATUS_UNSPECIFIED = 0;
+  TOURNAMENT_STATUS_DRAFT = 1;
+  TOURNAMENT_STATUS_REGISTRATION_OPEN = 2;
+  TOURNAMENT_STATUS_STARTED = 3;
+}
