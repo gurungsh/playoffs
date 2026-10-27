@@ -1,0 +1,38 @@
+@inject IAuthorizationService Authorization
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Playoffs</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <a asp-area="" asp-controller="Home" asp-action="Index">Playoffs</a>
+            @if ((await Authorization.AuthorizeAsync(User, Policies.Organizer)).Succeeded)
+            {
+                <a asp-area="Organizer" asp-controller="Home" asp-action="Index">Organizer</a>
+            }
+            @if ((await Authorization.AuthorizeAsync(User, Policies.Admin)).Succeeded)
+            {
+                <a asp-area="Admin" asp-controller="Home" asp-action="Index">Admin</a>
+            }
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+                    <span>@User.Identity.Name</span>
+                    <button type="submit">Sign out</button>
+                </form>
+            }
+            else
+            {
+                <a asp-area="" asp-controller="Account" asp-action="Login">Sign in</a>
+            }
+        </nav>
+    </header>
+    <main>
+        @RenderBody()
+    </main>
+</body>
+</html>

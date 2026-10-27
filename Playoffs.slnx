@@ -2,8 +2,10 @@
   <Folder Name="/src/">
     <Project Path="src/Playoffs.Contracts/Playoffs.Contracts.csproj" />
     <Project Path="src/Playoffs.Tournament/Playoffs.Tournament.csproj" />
+    <Project Path="src/Playoffs.Web/Playoffs.Web.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Playoffs.Tournament.Tests/Playoffs.Tournament.Tests.csproj" />
+    <Project Path="tests/Playoffs.Web.Tests/Playoffs.Web.Tests.csproj" />
   </Folder>
 </Solution>

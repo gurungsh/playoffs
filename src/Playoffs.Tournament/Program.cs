@@ -1,5 +1,6 @@
 using System.Globalization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Playoffs.Tournament.Api;
 using Playoffs.Tournament.Data;
@@ -16,34 +17,38 @@ builder.Host.UseSerilog(
             .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture)
 );
 
-var mongo = builder.Configuration.GetSection("Mongo");
-var mongoConnectionString =
-    mongo["ConnectionString"]
-    ?? throw new InvalidOperationException("Config 'Mongo:ConnectionString' is missing.");
-var mongoDatabase =
-    mongo["Database"] ?? throw new InvalidOperationException("Config 'Mongo:Database' is missing.");
+builder
+    .Services.AddOptions<MongoOptions>()
+    .BindConfiguration(MongoOptions.SectionName)
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
 
-builder.Services.AddSingleton<IMongoClient>(new MongoClient(mongoConnectionString));
+builder.Services.AddSingleton<IMongoClient>(sp => new MongoClient(
+    sp.GetRequiredService<IOptions<MongoOptions>>().Value.ConnectionString
+));
 builder.Services.AddSingleton(sp =>
     sp.GetRequiredService<IMongoClient>()
-        .GetDatabase(mongoDatabase)
+        .GetDatabase(sp.GetRequiredService<IOptions<MongoOptions>>().Value.Database)
         .GetCollection<TournamentDocument>(MongoSetup.TournamentsCollection)
 );
 
-var auth = builder.Configuration.GetSection("Auth");
-var authority =
-    auth["Authority"] ?? throw new InvalidOperationException("Config 'Auth:Authority' is missing.");
-var audience =
-    auth["Audience"] ?? throw new InvalidOperationException("Config 'Auth:Audience' is missing.");
-
 builder
-    .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.Authority = authority;
-        options.Audience = audience;
-        options.RequireHttpsMetadata = auth.GetValue("RequireHttpsMetadata", true);
-    });
+    .Services.AddOptions<AuthOptions>()
+    .BindConfiguration(AuthOptions.SectionName)
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+builder
+    .Services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+    .Configure<IOptions<AuthOptions>>(
+        (options, auth) =>
+        {
+            options.Authority = auth.Value.Authority;
+            options.Audience = auth.Value.Audience;
+            options.RequireHttpsMetadata = auth.Value.RequireHttpsMetadata;
+        }
+    );
 
 builder.Services.AddAuthorization();
 

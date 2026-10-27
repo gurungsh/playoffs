@@ -16,7 +16,7 @@ Soccer comes first. Pickleball and basketball follow, to prove the sport abstrac
 | Service | What it does | Ports |
 |---|---|---|
 | Tournament | Tournaments and teams over gRPC. Later: registration, captain invitations, starting a tournament | 5101 (gRPC), 5100 (`/health`) |
-| Web | MVC site, admin area, live scores (SignalR). Acts as the BFF, so tokens stay on the server | 5200 (planned) |
+| Web | MVC site, admin area, live scores (SignalR). Acts as the BFF, so tokens stay on the server | 7200 (https), 5200 (http, redirects) |
 | Results | Referee assignment, score reporting and corrections, disputes, live match events. Hosted inside Tournament until it is split out | planned |
 | Scheduling | Venues, fields and constraint-based slot assignment | planned |
 | Notification | Event-driven invitation emails, reminders and updates | planned |
@@ -72,6 +72,16 @@ Prerequisites: the .NET SDK from `global.json`, Docker, and Buf (`brew install b
 
    The launch profile sets `Development`, which seeds two sample tournaments. Check http://localhost:5100/health.
 
+5. **Run the Web site.** Give it the `playoffs-web` client secret (the `WEB_CLIENT_SECRET` value from `.env`) as a user secret, trust the dev certificate once, then start it:
+
+   ```bash
+   dotnet user-secrets set "Auth:ClientSecret" "<WEB_CLIENT_SECRET>" --project src/Playoffs.Web
+   dotnet dev-certs https --trust
+   dotnet run --project src/Playoffs.Web
+   ```
+
+   Open https://localhost:7200 and sign in as a seed user. `organizer1` sees the Organizer area, `admin` sees both areas, and `referee1` gets "Access denied" on /Organizer. If the realm was imported before this step existed, reset it with `docker compose down -v` so Keycloak imports the role mapper.
+
 ### Try a call
 
 Get a token for `organizer1` and fetch the seeded Summer Cup with [grpcurl](https://github.com/fullstorydev/grpcurl) (`brew install grpcurl`):
@@ -98,7 +108,7 @@ Unchecked items are not implemented yet:
 - [x] **Repo skeleton**: solution, central package management, analyzers with warnings as errors, and `scripts/check.sh` for restore, build, format check and tests
 - [x] **Local infrastructure and identity**: MongoDB replica set, Keycloak on SQL Server with the `playoffs` realm, roles, clients and seed users
 - [x] **Tournament service shell**: gRPC `GetTournament` and `ListTournaments` over MongoDB, JWT validation, dev seed data, integration tests and Buf checks
-- [ ] **Web shell**: MVC layout, OIDC login and logout, BFF token handling, role policies, Admin and Organizer areas
+- [x] **Web shell**: MVC layout, OIDC login and logout, BFF token handling, role policies, Admin and Organizer areas
 - [ ] **Web calls Tournament**: typed gRPC client with token forwarding and deadlines, public tournament list
 - [ ] **Domain logic**: sport rules (soccer first), round-robin fixture generator and standings with tiebreakers, with property-based tests
 - [ ] **Tournament aggregate**: registration, capacity and unique team names, domain events, an in-house mediator with pipeline behaviors

@@ -24,6 +24,19 @@
             "access.token.claim": "true",
             "id.token.claim": "false"
           }
+        },
+        {
+          "name": "realm-roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "config": {
+            "claim.name": "roles",
+            "multivalued": "true",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "false",
+            "userinfo.token.claim": "false"
+          }
         }
       ],
       "name": "Playoffs Web (MVC)",
@@ -32,7 +45,10 @@
       "secret": "${WEB_CLIENT_SECRET}",
       "standardFlowEnabled": true,
       "directAccessGrantsEnabled": false,
-      "redirectUris": ["http://localhost:5200/signin-oidc", "https://localhost:7200/signin-oidc"],
+      "redirectUris": [
+        "http://localhost:5200/signin-oidc",
+        "https://localhost:7200/signin-oidc"
+      ],
       "webOrigins": ["+"],
       "attributes": {
         "pkce.code.challenge.method": "S256",
@@ -82,10 +98,90 @@
     }
   ],
   "users": [
-    { "id": "00000000-0000-4000-8000-000000000001", "username": "admin", "email": "admin@playoffs.test", "firstName": "Ada", "lastName": "Admin", "enabled": true, "emailVerified": true, "realmRoles": ["Admin"], "credentials": [{ "type": "password", "value": "${SEED_USER_PASSWORD}", "temporary": false }] },
-    { "id": "00000000-0000-4000-8000-000000000002", "username": "organizer1", "email": "organizer1@playoffs.test", "firstName": "Olga", "lastName": "Organizer", "enabled": true, "emailVerified": true, "realmRoles": ["Organizer"], "credentials": [{ "type": "password", "value": "${SEED_USER_PASSWORD}", "temporary": false }] },
-    { "id": "00000000-0000-4000-8000-000000000003", "username": "organizer2", "email": "organizer2@playoffs.test", "firstName": "Omar", "lastName": "Organizer", "enabled": true, "emailVerified": true, "realmRoles": ["Organizer"], "credentials": [{ "type": "password", "value": "${SEED_USER_PASSWORD}", "temporary": false }] },
-    { "id": "00000000-0000-4000-8000-000000000004", "username": "referee1", "email": "referee1@playoffs.test", "firstName": "Rita", "lastName": "Referee", "enabled": true, "emailVerified": true, "realmRoles": ["Referee"], "credentials": [{ "type": "password", "value": "${SEED_USER_PASSWORD}", "temporary": false }] },
-    { "id": "00000000-0000-4000-8000-000000000005", "username": "referee2", "email": "referee2@playoffs.test", "firstName": "Raj", "lastName": "Referee", "enabled": true, "emailVerified": true, "realmRoles": ["Referee"], "credentials": [{ "type": "password", "value": "${SEED_USER_PASSWORD}", "temporary": false }] }
+    {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "username": "admin",
+      "email": "admin@playoffs.test",
+      "firstName": "Ada",
+      "lastName": "Admin",
+      "enabled": true,
+      "emailVerified": true,
+      "realmRoles": ["Admin"],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${SEED_USER_PASSWORD}",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000002",
+      "username": "organizer1",
+      "email": "organizer1@playoffs.test",
+      "firstName": "Olga",
+      "lastName": "Organizer",
+      "enabled": true,
+      "emailVerified": true,
+      "realmRoles": ["Organizer"],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${SEED_USER_PASSWORD}",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "username": "organizer2",
+      "email": "organizer2@playoffs.test",
+      "firstName": "Omar",
+      "lastName": "Organizer",
+      "enabled": true,
+      "emailVerified": true,
+      "realmRoles": ["Organizer"],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${SEED_USER_PASSWORD}",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000004",
+      "username": "referee1",
+      "email": "referee1@playoffs.test",
+      "firstName": "Rita",
+      "lastName": "Referee",
+      "enabled": true,
+      "emailVerified": true,
+      "realmRoles": ["Referee"],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${SEED_USER_PASSWORD}",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000005",
+      "username": "referee2",
+      "email": "referee2@playoffs.test",
+      "firstName": "Raj",
+      "lastName": "Referee",
+      "enabled": true,
+      "emailVerified": true,
+      "realmRoles": ["Referee"],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${SEED_USER_PASSWORD}",
+          "temporary": false
+        }
+      ]
+    }
   ]
 }
